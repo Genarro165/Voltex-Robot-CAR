@@ -14,9 +14,9 @@ ifeq ($(TEST), true)
 else
 	CC = avr-gcc
 	CXX = avr-g++
-	CXXFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os -Wall
+	CXXFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os -Wall -std=gnu++11 -flto -fno-exceptions -fno-rtti -ffunction-sections -fdata-sections
 	MN_FILE = main.elf
-	LINK_FLAGS = -mmcu=$(MCU) -o $(MN_FILE)
+	LINK_FLAGS = -Os -mmcu=$(MCU) -o $(MN_FILE) -flto -Wl,--gc-sections
 endif
 
 ifeq ($(CORE), true)
@@ -37,8 +37,8 @@ BAUD ?= 9600
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(MN_FILE): $(OBJS)
-	$(CC) $(LINK_FLAGS) $(OBJS)
-	avr-size $(MN_FILE)
+	$(CXX) $(LINK_FLAGS) $(OBJS)
+	avr-size --format=avr --mcu=atmega328p $(MN_FILE)
 
 .PHONY: all install clean monitor
 
