@@ -19,8 +19,9 @@ void setup() {
     registerNewState(Idle, &idleState);
     registerNewState(Slave, &slaveState);
     registerNewState(RemoteControl, &remoteControlState);
+    registerNewState(Autonomous, &autonomousState);
 
-}   
+}
 
 void loop() {
     //run all of the update functions
