@@ -4,16 +4,14 @@ int leftDistance_cm;
 int rightDistance_cm;
 int middleDistance_cm;
 void distanceSensorInit(){
- pinMode(leftEchoPin, INPUT);
- pinMode(rightEchoPin, INPUT);
- pinMode(middleEchoPin, INPUT);
- pinMode(trigPin, OUTPUT);
- digitalWrite(trigPin, LOW);
+ DDRD &= ~(PDleftEchoPin|PDrightEchoPin|PDmiddleEchoPin);
+ DDRB |= (PBtrigPin);
+ PORTB |= ~(PBtrigPin);
 }
 void trigger(){
- digitalWrite(trigPin, HIGH);
- delayMicroseconds(10);
- digitalWrite(trigPin, LOW);
+ PORTB |= (PBtrigPin);
+ _delay_us(10);
+ PORTB |= ~(PBtrigPin);
 }
 void distanceSensorUpdate(){
   trigger();
@@ -26,3 +24,7 @@ void distanceSensorUpdate(){
   unsigned long middleDuration = pulseIn(middleEchoPin, HIGH, 10000);
   middleDistance_cm = middleDuration * 0.034 / 2;
 }
+/* void distanceSensorUpdate(){
+unsigned long leftDuration = pulseIn(leftEchoPin, HIGH, 10000);
+  leftDistance_cm = leftDuration * 0.034 / 2;
+} */
