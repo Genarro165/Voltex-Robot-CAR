@@ -1,4 +1,8 @@
-pragma once
+#pragma once
+#include <stdint.h>
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
 extern volatile uint64_t ticks;
 
 void timerZeroInit();
