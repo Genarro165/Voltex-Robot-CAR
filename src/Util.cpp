@@ -1,3 +1,5 @@
+#include Util.h
+
 void timerZeroInit(){
    TCCR0A = 0; // normal mode
    TCCR0B = 0;
