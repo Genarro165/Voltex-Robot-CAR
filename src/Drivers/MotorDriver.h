@@ -1,15 +1,14 @@
 #pragma once
-#include <Arduino.h>
 
 //motor A is the left channel and motor B is the right channel
 
-#define MOTOR_A_PWM 6
-#define MOTOR_B_PWM 5
+#define MOTOR_A_PWM (1<<6)
+#define MOTOR_B_PWM (1<<5)
 
-#define MOTOR_A_IN1 3
-#define MOTOR_A_IN2 2
-#define MOTOR_B_IN3 7
-#define MOTOR_B_IN4 4
+#define MOTOR_A_IN1 (1<<3)
+#define MOTOR_A_IN2 (1<<2)
+#define MOTOR_B_IN3 (1<<7)
+#define MOTOR_B_IN4 (1<<4)
 
 //this controls the turn speed of the gradual turns
 #define TURN_FACTOR 0.75
