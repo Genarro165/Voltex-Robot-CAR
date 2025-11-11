@@ -1,4 +1,5 @@
 #pragma once
+#include <avr/io.h>
 
 #define HLS_PIN (1<<0)
 #define MLS_PIN (1<<1)
