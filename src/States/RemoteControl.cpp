@@ -2,7 +2,9 @@
 
 void remoteControlState(struct State* currState){
   if (currState->currentEvent == InputComplete){
-    if (strncmp(inputBuffer[0], "w", 1) == 0){
+    if (strncmp(inputBuffer[0], "speed", 5) == 0) {
+      //parse serial data
+    } else if (strncmp(inputBuffer[0], "w", 1) == 0){
       setMotorState(FORWARDS);
     } else if (strncmp(inputBuffer[0], "a", 1) == 0) {
       setMotorState(LEFT);
@@ -10,7 +12,7 @@ void remoteControlState(struct State* currState){
       setMotorState(RIGHT);
     } else if (strncmp(inputBuffer[0], "s", 1) == 0) {
       setMotorState(BACKWARDS);
-    } else {
+    } else if (strncmp(inputBuffer[0], "halt", 4) == 0){
       setMotorState(HALTED);
     }
     flushArguments();

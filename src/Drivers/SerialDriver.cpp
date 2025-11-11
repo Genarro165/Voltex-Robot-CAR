@@ -9,13 +9,18 @@ void serialUpdate(){
     if (serialInputSize < SERIAL_BUFFER_SIZE) {
       char inChar = Serial.read();
 
-      if (inChar == '\n') {
+      if (inChar == '\r') {
+        Serial.print("\r\n");
         serialInputComplete = true;
+      } else {
+        Serial.print(inChar);
       }
 
       if (serialInputComplete == false) {
         serialBuffer[serialInputSize] = inChar;
         serialInputSize++;
+      } else {
+        serialInputComplete = true;
       }
     }
   }

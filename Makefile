@@ -14,9 +14,9 @@ ifeq ($(TEST), true)
 else
 	CC = avr-gcc
 	CXX = avr-g++
-	CXXFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os -Wall
+	CXXFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os -Wall -std=gnu++11 -flto -fno-exceptions -fno-rtti -ffunction-sections -fdata-sections
 	MN_FILE = main.elf
-	LINK_FLAGS = -mmcu=$(MCU) -o $(MN_FILE)
+	LINK_FLAGS = -Os -mmcu=$(MCU) -o $(MN_FILE) -flto -Wl,--gc-sections
 endif
 
 ifeq ($(CORE), true)
@@ -29,7 +29,7 @@ $(shell cp $(INO_NAME).ino $(INO_NAME).cpp)
 SRCS ?= $(wildcard src/Drivers/*.cpp) $(wildcard src/*.cpp) $(wildcard src/States/*.cpp)
 TOTAL_SRCS += $(SRCS)
 OBJS = $(TOTAL_SRCS:.cpp=.o)
-PORT ?= /dev/ttyUSB0
+PORT ?= /dev/ttyACM0
 BAUD ?= 9600
 
 
@@ -37,8 +37,8 @@ BAUD ?= 9600
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(MN_FILE): $(OBJS)
-	$(CC) $(LINK_FLAGS) $(OBJS)
-	avr-size $(MN_FILE)
+	$(CXX) $(LINK_FLAGS) $(OBJS)
+	avr-size --format=avr --mcu=atmega328p $(MN_FILE)
 
 .PHONY: all install clean monitor
 
@@ -46,7 +46,7 @@ all: $(MN_FILE)
 
 install: $(MN_FILE)
 	avr-objcopy -O ihex $(MN_FILE) main.hex
-	sudo avrdude -c arduino -p m328p -C /etc/avrdude.conf -P $(PORT) -U flash:w:main.hex
+	sudo avrdude -c xplainedmini -p m328p -C /etc/avrdude.conf -P usb -U flash:w:main.hex
 	minicom --dev $(PORT) -b $(BAUD)
 
 monitor:

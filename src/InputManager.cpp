@@ -32,6 +32,7 @@ void parseArguments(char* data, int size) {
             if (argumentCount++ > INPUT_MAX_ARGS) {
                 break;
             }
+            i++;//skip space
             argumentBase = 0;
         }
         inputBuffer[argumentCount][argumentBase] = data[i];
@@ -45,10 +46,14 @@ void parseArguments(char* data, int size) {
 }
 
 void flushArguments() {
+    for (uint8_t i = 0; i < sizeof(inputBuffer); i++) {
+        ((char*) inputBuffer)[i] = 0;
+    }
     argumentCount = 0;
     currentState.currentEvent = None;
 }
 
+const char StringStates[][16] = {"Idle", "Slave", "RemoteControl", "Autonomous"};
 
 void inputManagerUpdate() {
     //make sure that the input is handeled
@@ -63,17 +68,25 @@ void inputManagerUpdate() {
         currentState.currentEvent = InputComplete;
     } else if (bluetoothStringComplete) {
         parseArguments(bluetoothInputString, bluetoothInputSize);
-        
         bluetoothStringComplete = false;
         bluetoothInputSize = 0;
-        
+        Serial.print("bluetooth command: ");
+        Serial.println(inputBuffer[0]);
     }
 
-    if (strncmp(inputBuffer[0], "setStateIdle", INPUT_WORD_SIZE) == 0) {
-        Serial.print("changed state to idle\r\n");
-        currentState.id = Idle;
+    if (strncmp(inputBuffer[0], "setS", INPUT_WORD_SIZE) == 0) {
+        Serial.println(inputBuffer[1]);
+        for (uint8_t i = 0; i < 4; i++) {
+            if (strncmp(inputBuffer[1], StringStates[i], INPUT_WORD_SIZE) == 0) {
+                currentState.id = (enum StateID) i;
+            }
+        }
+        flushArguments();
+    } else if (strncmp(inputBuffer[0], "getS", INPUT_WORD_SIZE) == 0) {
+        Serial.println(StringStates[currentState.id]);
+        flushArguments();
+    } else {
         flushArguments();
     }
-
 }
 
