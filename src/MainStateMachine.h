@@ -1,6 +1,6 @@
 #pragma once
 #include <stddef.h>
-
+#include <stdint.h>
 /*
  * so all you need to do to add a new state is to first:
  * Add a new state to the StateID enum.
