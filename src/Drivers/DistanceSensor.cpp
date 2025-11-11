@@ -1,7 +1,8 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <util/delay.h>
 #include "DistanceSensor.h"
-#include "Util.h"
+#include "../Util.h"
 
 int leftDistance_cm;
 int rightDistance_cm;
@@ -10,6 +11,7 @@ int leftTimeStart;
 int rightTimeStart;
 int middleTimeStart;
 int lastPinDState;
+
 void distanceSensorInit(){
  // setting echo pins to input
  DDRD &= ~(PDleftEchoPin|PDrightEchoPin|PDmiddleEchoPin);
@@ -26,22 +28,25 @@ void distanceSensorInit(){
  sei();
  lastPinDState = PIND;
 }
+
 void trigger(){
  PORTB |= (PBtrigPin);
  _delay_us(10);
  PORTB |= ~(PBtrigPin);
 }
+
 //left pin interupt
 ISR(INT1_vect){
  if (PIND & PDleftEchoPin){
   leftTimeStart = ticks;
  }
  else {
-  uint leftDuration = ticks- leftTimeStart;
+  uint16_t leftDuration = ticks- leftTimeStart;
    leftDistance_cm = leftDuration * 0.034 / 2;
    leftTimeStart = 0; 
  } 
 }
+
 // middle and right pin interupts
 ISR(PCINT2_vect){
  uint8_t changed = PIND ^ lastPinDState; // which pins changed?
@@ -53,7 +58,7 @@ ISR(PCINT2_vect){
    middleTimeStart = ticks;  // Rising edge on PD4
   }
   else {
-   uint middleDuration = ticks- middleTimeStart;
+   uint16_t middleDuration = ticks - middleTimeStart;
    middleDistance_cm = middleDuration * 0.034 / 2;  // Falling edge on PD4
    middleTimeStart = 0;
   }
@@ -64,12 +69,12 @@ ISR(PCINT2_vect){
    rightTimeStart = ticks;  // Rising edge on PD5
   }
   else {
-   uint rightDuration = ticks- rightTimeStart;
+   uint16_t rightDuration = ticks - rightTimeStart;
    rightDistance_cm = rightDuration * 0.034 / 2;
-   rightTimerStart = 0;
+   rightTimeStart = 0;
   }
  }
-
+}
 /*
 void distanceSensorUpdate(){
   trigger();
