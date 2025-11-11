@@ -1,4 +1,5 @@
 #pragma once
+#include <avr/io.h>
 
 //motor A is the left channel and motor B is the right channel
 

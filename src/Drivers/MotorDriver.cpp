@@ -31,7 +31,7 @@ unsigned char currentMotorBSpeed = 0;
 static void setMotorParams(bool a_in1, bool a_in2, bool b_in3, bool b_in4) {
 
 
-  timer1_set_pwm(currentMotorASpeed, currentMotorBspeed);
+  timer1_set_pwm(currentMotorASpeed, currentMotorBSpeed);
 
 
        if (a_in1 == true)
