@@ -29,7 +29,7 @@ $(shell cp $(INO_NAME).ino $(INO_NAME).cpp)
 SRCS ?= $(wildcard src/Drivers/*.cpp) $(wildcard src/*.cpp) $(wildcard src/States/*.cpp)
 TOTAL_SRCS += $(SRCS)
 OBJS = $(TOTAL_SRCS:.cpp=.o)
-PORT ?= /dev/ttyUSB0
+PORT ?= /dev/ttyACM0
 BAUD ?= 9600
 
 
@@ -46,7 +46,7 @@ all: $(MN_FILE)
 
 install: $(MN_FILE)
 	avr-objcopy -O ihex $(MN_FILE) main.hex
-	sudo avrdude -c arduino -p m328p -C /etc/avrdude.conf -P $(PORT) -U flash:w:main.hex
+	sudo avrdude -c xplainedmini -p m328p -C /etc/avrdude.conf -P usb -U flash:w:main.hex
 	minicom --dev $(PORT) -b $(BAUD)
 
 monitor:
