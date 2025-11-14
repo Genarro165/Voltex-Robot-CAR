@@ -8,10 +8,6 @@ void timerZeroInit(){
   TCNT0 = 0;
 }
 
-void timerZeroUpdate(){
-  
-}
-
 ISR(TIMER0_OVF_vect) {
    ticks++;  // One tick per overflow
 }
