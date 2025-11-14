@@ -70,23 +70,29 @@ void inputManagerUpdate() {
         parseArguments(bluetoothInputString, bluetoothInputSize);
         bluetoothStringComplete = false;
         bluetoothInputSize = 0;
-        Serial.print("bluetooth command: ");
-        Serial.println(inputBuffer[0]);
+        currentState.currentEvent = InputComplete;
     }
+    if (currentState.currentEvent == InputComplete) {
+        Serial.print("recieved: \"");
+        Serial.print(inputBuffer[0]);
+        Serial.print("\" : \"");
+        Serial.print(inputBuffer[1]);
+        Serial.print("\"\r\n");
 
-    if (strncmp(inputBuffer[0], "setS", INPUT_WORD_SIZE) == 0) {
-        Serial.println(inputBuffer[1]);
-        for (uint8_t i = 0; i < 4; i++) {
-            if (strncmp(inputBuffer[1], StringStates[i], INPUT_WORD_SIZE) == 0) {
-                currentState.id = (enum StateID) i;
+        if (strncmp(inputBuffer[0], "setS", INPUT_WORD_SIZE) == 0) {
+            Serial.println(inputBuffer[1]);
+            for (uint8_t i = 0; i < 4; i++) {
+                if (strncmp(inputBuffer[1], StringStates[i], INPUT_WORD_SIZE) == 0) {
+                    currentState.id = (enum StateID) i;
+                }
             }
+            flushArguments();
+        } else if (strncmp(inputBuffer[0], "getS", INPUT_WORD_SIZE) == 0) {
+            Serial.println(StringStates[currentState.id]);
+            flushArguments();
+        } else {
+            flushArguments();
         }
-        flushArguments();
-    } else if (strncmp(inputBuffer[0], "getS", INPUT_WORD_SIZE) == 0) {
-        Serial.println(StringStates[currentState.id]);
-        flushArguments();
-    } else {
-        flushArguments();
     }
 }
 

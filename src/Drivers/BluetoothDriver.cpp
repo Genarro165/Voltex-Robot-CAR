@@ -1,4 +1,6 @@
 #include "BluetoothDriver.h"
+#include "../InputManager.h"
+
 char bluetoothInputString[BLUETOOTH_BUFFER_SIZE] = {0};
 bool bluetoothStringComplete = false;
 int bluetoothInputSize = 0;
@@ -14,6 +16,7 @@ void bluetoothUpdate() {
   while (bluetooth.available()) {
     // Get the new byte
     char inChar = (char)bluetooth.read();
+
   if (inChar == '\r') {
       // Set the flag
       bluetoothStringComplete = true;
@@ -25,5 +28,19 @@ void bluetoothUpdate() {
           bluetoothStringComplete = true;
         }
     }
+
+    
+    if (bluetoothInputSize == 7) {
+      if (strncmp(bluetoothInputString, "OK+CONN", 7) == 0) {
+          Serial.print("Bleutooth connected!\r\n");
+          bluetoothInputSize = 0;
+      } else if (strncmp(bluetoothInputString, "OK+LOST", 7) == 0) {
+          Serial.print("Bleutooth disconnected\r\n");
+          bluetoothInputSize = 0;
+        }
+    }
   }
+  
+
+
 }
