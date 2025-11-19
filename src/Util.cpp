@@ -1,5 +1,5 @@
 #include "Util.h"
-
+volatile uint64_t ticks;
 void timerZeroInit(){
   TCCR0A = 0; // normal mode
   TCCR0B = 0;
