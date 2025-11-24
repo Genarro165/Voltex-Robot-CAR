@@ -4,14 +4,15 @@ bool serialInputComplete = false;
 int serialInputSize = 0;
 char serialInputBuffer[SERIAL_RX_BUFFER_SIZE] = {0};
  
-static char USART_TxBuf[SERIAL_TX_BUFFER_SIZE];
-static volatile unsigned char USART_TxHead;
-static volatile unsigned char USART_TxTail; 
+static char serialOutputBuffer[SERIAL_TX_BUFFER_SIZE];
+static volatile unsigned char serialTxHead;
+static volatile unsigned char serialTxTail; 
 
+/*
 //shouldnt this be atomic??
 ISR(USART_RX_vect) {
 
-  if (serialInputSize < SERIAL_BUFFER_SIZE) {
+  if (serialInputSize < SERIAL_RX_BUFFER_SIZE) {
     char inChar = UDR0;
 
     if (inChar == '\r') {
@@ -35,69 +36,44 @@ ISR(USART_UDRE_vect) {
     unsigned char tmptail;
    
     // Cheqck if all data is transmitted
-    if (USART_TxHead != USART_TxTail) {
+    if (serialTxHead != serialTxTail) {
       // Calculate buffer index
-      tmptail = (USART_TxTail + 1) & USART_TX_BUFFER_MASK;
+      tmptail = (serialTxTail + 1) & SERIAL_TX_BUFFER_MASK;
    
       // Store new index
-      USART_TxTail = tmptail;
+      serialTxTail = tmptail;
    
       // Start transmission
-      UDR0 = USART_TxBuf[tmptail];
+      UDR0 = serialOutputBuffer[tmptail];
     } else {
       // Disable UDRE interrupt
       UCSR0B &= ~(1 << UDRIE0);
     }
 }
-
+*/
 void serialTransmit(char data) {
     unsigned char tmphead;
    
     // Calculate buffer index
-    tmphead = (USART_TxHead + 1) & USART_TX_BUFFER_MASK;
+    tmphead = (serialTxHead + 1) & SERIAL_TX_BUFFER_MASK;
    
     // Wait for free space in buffer
-    while (tmphead == USART_TxTail)
-      ;
+    while (tmphead == serialTxTail);
    
     // Store data in buffer
-    USART_TxBuf[tmphead] = data;
+    serialOutputBuffer[tmphead] = data;
    
     // Store new index
-    USART_TxHead = tmphead;
+    serialTxHead = tmphead;
    
     // Enable UDRE interrupt
     UCSR0B |= (1 << UDRIE0);
 }
- 
-void serialUpdate(){
-  while (Serial.available()){
-    if (serialInputSize < SERIAL_BUFFER_SIZE) {
-      char inChar = Serial.read();
 
-      if (inChar == '\r') {
-        Serial.print("\r\n");
-        serialInputComplete = true;
-      } else {
-        Serial.print(inChar);
-      }
-
-      if (serialInputComplete == false) {
-        serialBuffer[serialInputSize] = inChar;
-        serialInputSize++;
-      } else {
-        serialInputComplete = true;
-      }
-    }
-  }
-}
-
-void usart0_init(unsigned int ubrr) {
+void serialInit(uint16_t ubrr) {
     //initialize variables
-    USART_RxHead = 0;
-    USART_RxTail = 0;
-    USART_TxHead = 0;
-    USART_TxTail = 0;
+    serialTxHead = 0;
+    serialTxTail = 0;
 
     // Set baud rate
     UBRR0H = (unsigned char)(ubrr >> 8);

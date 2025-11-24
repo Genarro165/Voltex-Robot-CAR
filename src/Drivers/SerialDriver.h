@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include "avr/interrupt.h"
 
 #define F_CPU 16000000UL
 
@@ -11,15 +12,14 @@
 #define SERIAL_TX_BUFFER_SIZE (32)
  
 // Buffer size checks
-#define USART_RX_BUFFER_MASK (USART_RX_BUFFER_SIZE - 1)
+#define SERIAL_RX_BUFFER_MASK (SERIAL_RX_BUFFER_SIZE - 1)
 
-#define USART_TX_BUFFER_MASK (USART_TX_BUFFER_SIZE - 1)
-
-
-void serialInit();
+#define SERIAL_TX_BUFFER_MASK (SERIAL_TX_BUFFER_SIZE - 1)
 
 extern bool serialInputComplete;
 extern int serialInputSize;
-extern char serialBuffer[SERIAL_RX_BUFFER_SIZE];
+extern char serialInputBuffer[SERIAL_RX_BUFFER_SIZE];
 
+void serialTransmit(char data);
+void serialInit(uint16_t ubbr);
 
