@@ -16,18 +16,20 @@ void setup() {
     //distanceSensorInit();
     //motorDriverInit();
     serialInit(CALC_BAUD(9600));
-    bluetoothInit();
+    //bluetoothInit();
     
     registerNewState(Idle, &idleState);
     //registerNewState(Slave, &slaveState);
     //registerNewState(RemoteControl, &remoteControlState);
     //registerNewState(Autonomous, &autonomousState);
     
+    prints("yeet\r\n");
+
 }
 
 void loop() {
     //run all of the update functions
-    bluetoothUpdate();
+    //bluetoothUpdate();
     //distanceSensorUpdate();
     //lineSensorUpdate();
     inputManagerUpdate();
@@ -36,3 +38,8 @@ void loop() {
     runCurrentState();
 }
 
+int main(void) {
+    setup();
+
+    while(1) { loop(); }
+}
