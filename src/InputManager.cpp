@@ -1,6 +1,12 @@
 #include "InputManager.h"
 
 
+void prints(const char* str) {
+    for (;*str != '0'; str++) {
+        serialTransmit(*str);
+    }
+}
+
 int strncmp( const char * s1, const char * s2, unsigned int n )
 {
     while ( n && *s1 && ( *s1 == *s2 ) )
@@ -62,7 +68,7 @@ void inputManagerUpdate() {
     }
 
     if (serialInputComplete) {
-        parseArguments(serialBuffer, serialInputSize);
+        parseArguments(serialInputBuffer, serialInputSize);
         serialInputSize = 0;
         serialInputComplete = false;
         currentState.currentEvent = InputComplete;
@@ -70,12 +76,14 @@ void inputManagerUpdate() {
         parseArguments(bluetoothInputString, bluetoothInputSize);
         bluetoothStringComplete = false;
         bluetoothInputSize = 0;
-        Serial.print("bluetooth command: ");
-        Serial.println(inputBuffer[0]);
+        prints("bluetooth command: ");
+        prints(inputBuffer[0]);
+        prints("\r\n");
     }
 
     if (strncmp(inputBuffer[0], "setS", INPUT_WORD_SIZE) == 0) {
-        Serial.println(inputBuffer[1]);
+        prints(inputBuffer[1]);
+        prints("\r\n");
         for (uint8_t i = 0; i < 4; i++) {
             if (strncmp(inputBuffer[1], StringStates[i], INPUT_WORD_SIZE) == 0) {
                 currentState.id = (enum StateID) i;
@@ -83,7 +91,8 @@ void inputManagerUpdate() {
         }
         flushArguments();
     } else if (strncmp(inputBuffer[0], "getS", INPUT_WORD_SIZE) == 0) {
-        Serial.println(StringStates[currentState.id]);
+        prints(StringStates[currentState.id]);
+        prints("\r\n");
         flushArguments();
     } else {
         flushArguments();

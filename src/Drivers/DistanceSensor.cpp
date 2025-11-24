@@ -35,6 +35,7 @@ void trigger(){
  PORTB |= ~(PBtrigPin);
 }
 
+/*
 //left pin interupt
 ISR(INT1_vect){
  if (PIND & PDleftEchoPin){
@@ -75,6 +76,8 @@ ISR(PCINT2_vect){
   }
  }
 }
+*/
+
 /*
 void distanceSensorUpdate(){
   trigger();
