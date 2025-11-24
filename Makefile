@@ -29,9 +29,17 @@ $(shell cp $(INO_NAME).ino $(INO_NAME).cpp)
 SRCS ?= $(wildcard src/Drivers/*.cpp) $(wildcard src/*.cpp) $(wildcard src/States/*.cpp)
 TOTAL_SRCS += $(SRCS)
 OBJS = $(TOTAL_SRCS:.cpp=.o)
-PORT ?= /dev/ttyACM0
+MONITOR_PORT ?= /dev/ttyUSB0
 BAUD ?= 9600
+BOARD ?= xplainedmini
 
+ifeq ($(BOARD), xplainedmini)
+	PORT = usb
+	PROG = xplainedmini
+else
+	PORT = $(MONITOR_PORT)
+	PROG = arduino
+endif
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
@@ -39,6 +47,8 @@ BAUD ?= 9600
 $(MN_FILE): $(OBJS)
 	$(CXX) $(LINK_FLAGS) $(OBJS)
 	avr-size --format=avr --mcu=atmega328p $(MN_FILE)
+	@echo "programmer: $(PROG)"
+	@echo "port: 	   $(PORT)"
 
 .PHONY: all install clean monitor
 
@@ -46,11 +56,11 @@ all: $(MN_FILE)
 
 install: $(MN_FILE)
 	avr-objcopy -O ihex $(MN_FILE) main.hex
-	sudo avrdude -c xplainedmini -p m328p -C /etc/avrdude.conf -P usb -U flash:w:main.hex
-	minicom --dev $(PORT) -b $(BAUD)
+	sudo avrdude -c $(PROG) -p m328p -C /etc/avrdude.conf -P $(PORT) -U flash:w:main.hex
+	minicom --dev $(MONITOR_PORT) -b $(BAUD)
 
 monitor:
-	minicom --dev $(PORT) -b $(BAUD)
+	minicom --dev $(MONITOR_PORT) -b $(BAUD)
 
 clean:
 	rm -f $(OBJS) *.elf *.hex
