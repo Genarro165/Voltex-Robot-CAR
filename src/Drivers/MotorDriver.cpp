@@ -5,14 +5,51 @@ enum MotorState currentMotorState = HALTED;
 
 unsigned char currentMotorASpeed = 0;
 unsigned char currentMotorBSpeed = 0;
+  const int timer1_pwm_freq = 60;
 
-static void setMotorParams(int a_in1, int a_in2, int b_in3, int b_in4) {
-  analogWrite(MOTOR_A_PWM, currentMotorASpeed);
-  analogWrite(MOTOR_B_PWM, currentMotorBSpeed);
-  digitalWrite(MOTOR_A_IN1, a_in1);
-  digitalWrite(MOTOR_A_IN2, a_in2);
-  digitalWrite(MOTOR_B_IN3, b_in3);
-  digitalWrite(MOTOR_B_IN4, b_in4);
+  // Fast PWM, 8-bit, non-inverting, prescaler 64
+
+
+  void timer1_init() {
+   TCCR1A = 0;
+   TCCR1B = 0;
+
+   TCCR1A |= (1 << COM1A1) | (1 << WGM11);
+   TCCR1B |= (1 << WGM12) | (1 << WGM13) | (1 << CS10) | (1 << CS11);
+
+   ICR1 = (F_CPU/(64*timer1_pwm_freq)) - 1;
+  }
+
+  void timer1_set_pwm(uint8_t duty_cycleA, uint8_t duty_cycleB) {
+      OCR1A = ICR1 / (100 / duty_cycleA);
+      OCR1B = ICR1 / (100 / duty_cycleB);
+  }
+
+
+
+
+static void setMotorParams(bool a_in1, bool a_in2, bool b_in3, bool b_in4) {
+
+
+  timer1_set_pwm(currentMotorASpeed, currentMotorBSpeed);
+
+
+       if (a_in1 == true)
+            PORTD |= (MOTOR_A_IN1);
+        else
+            PORTD &= ~(MOTOR_A_IN1);
+       if (a_in2 == true)
+            PORTD |= (MOTOR_A_IN2);
+        else
+            PORTD &= ~(MOTOR_A_IN2);
+       if (b_in3 == true)
+            PORTD |= (MOTOR_B_IN3);
+        else
+            PORTD &= ~(MOTOR_B_IN3);
+     if (b_in4 == true)
+            PORTD |= (MOTOR_B_IN4);
+        else
+            PORTD &= ~(MOTOR_B_IN4);
 }
 
 
@@ -26,12 +63,7 @@ void changeMotorSpeed(unsigned char speed) {
   currentMotorBSpeed -= speed;
 }
 void motorDriverInit(){
-  pinMode (MOTOR_A_PWM, OUTPUT);
-  pinMode (MOTOR_B_PWM, OUTPUT);
-  pinMode (MOTOR_A_IN1, OUTPUT);
-  pinMode (MOTOR_A_IN2, OUTPUT);
-  pinMode (MOTOR_B_IN3, OUTPUT);
-  pinMode (MOTOR_B_IN4, OUTPUT);  
+  DDRD |= (MOTOR_A_PWM | MOTOR_B_PWM | MOTOR_A_IN1 | MOTOR_A_IN2 | MOTOR_B_IN3 | MOTOR_B_IN4);  
 }
 void setMotorState(enum MotorState newMotorState) {
   if (currentMotorState == newMotorState) {
@@ -43,29 +75,31 @@ void setMotorState(enum MotorState newMotorState) {
       setMotorParams(0, 0, 0, 0);
       break;
     case FORWARDS:
-      setMotorParams(LOW, HIGH, LOW, HIGH);
+      setMotorParams(true, false, true, false);
       break;
     case BACKWARDS:
-      setMotorParams(HIGH, LOW, HIGH, LOW);
+      setMotorParams(false, true, false, true);
     case LEFT:
       currentMotorASpeed = (unsigned char) currentMotorASpeed*TURN_FACTOR;
       currentMotorBSpeed = (unsigned char) currentMotorBSpeed*(1 + TURN_FACTOR);
-      setMotorParams(LOW, HIGH, LOW, HIGH);
+      setMotorParams(true, false, true, false);
       break;
     case RIGHT:
       currentMotorASpeed = (unsigned char) currentMotorASpeed*(1 + TURN_FACTOR);
       currentMotorBSpeed = (unsigned char) currentMotorBSpeed*TURN_FACTOR;
-      setMotorParams(LOW, HIGH, LOW, HIGH);
+      setMotorParams(true, false, true, false);
       break;
     case HARD_LEFT:
-      setMotorParams(HIGH, LOW, LOW, HIGH);
+      setMotorParams(false, true, true, false);
       break;
     case HARD_RIGHT:
-      setMotorParams(LOW, HIGH, HIGH, LOW);
+      setMotorParams(true, false, false, true);
     default:
       break;
   }
 }
+
+
 
 
 

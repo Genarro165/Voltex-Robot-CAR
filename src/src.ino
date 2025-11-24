@@ -15,7 +15,7 @@ void setup() {
     //lineSensorInit();
     //distanceSensorInit();
     //motorDriverInit();
-    serialInit();
+    serialInit(CALC_BAUD(9600));
     bluetoothInit();
     
     registerNewState(Idle, &idleState);
@@ -27,7 +27,6 @@ void setup() {
 
 void loop() {
     //run all of the update functions
-    serialUpdate();
     bluetoothUpdate();
     //distanceSensorUpdate();
     //lineSensorUpdate();
