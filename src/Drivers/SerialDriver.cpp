@@ -8,7 +8,7 @@ static char serialOutputBuffer[SERIAL_TX_BUFFER_SIZE];
 static volatile unsigned char serialTxHead;
 static volatile unsigned char serialTxTail; 
 
-/*
+
 //shouldnt this be atomic??
 ISR(USART_RX_vect) {
 
@@ -24,7 +24,7 @@ ISR(USART_RX_vect) {
     }
 
     if (serialInputComplete == false) {
-      serialBuffer[serialInputSize] = inChar;
+      serialInputBuffer[serialInputSize] = inChar;
       serialInputSize++;
     } else {
       serialInputComplete = true;
@@ -50,7 +50,7 @@ ISR(USART_UDRE_vect) {
       UCSR0B &= ~(1 << UDRIE0);
     }
 }
-*/
+
 void serialTransmit(char data) {
     unsigned char tmphead;
    
@@ -84,6 +84,7 @@ void serialInit(uint16_t ubrr) {
 
     // Set frame format: 8 data bits, 1 stop bit
     UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
+    sei();
 }
 
 
