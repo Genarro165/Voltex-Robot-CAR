@@ -20,7 +20,7 @@ else
 endif
 
 ifeq ($(CORE), true)
-	CXXFLAGS += -I../arduino-core
+	CXXFLAGS += -I../arduino-core -I/usr/share/arduino/hardware/arduino/avr/variants/standard
 	LINK_FLAGS += ../arduino-core/*.o
 endif
 
@@ -36,11 +36,11 @@ BAUD ?= 9600
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+.PHONY: all install clean monitor
+
 $(MN_FILE): $(OBJS)
 	$(CXX) $(LINK_FLAGS) $(OBJS)
 	avr-size --format=avr --mcu=atmega328p $(MN_FILE)
-
-.PHONY: all install clean monitor
 
 all: $(MN_FILE)
 
