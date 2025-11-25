@@ -1,5 +1,5 @@
 #include "InputManager.h"
-
+#include "Drivers/PortExpander.h"
 
 int strncmp( const char * s1, const char * s2, unsigned int n )
 {
@@ -90,8 +90,12 @@ void inputManagerUpdate() {
         } else if (strncmp(inputBuffer[0], "getS", INPUT_WORD_SIZE) == 0) {
             Serial.println(StringStates[currentState.id]);
             flushArguments();
-        } else if (strncmp(inputBuffer[0], "SetSpeed", INPUT_WORD_SIZE) == 0) {
+        } else if (strncmp(inputBuffer[0], "setSpeed", INPUT_WORD_SIZE) == 0) {
             Serial.print(inputBuffer[1]);
+            flushArguments();
+        } else if (strncmp(inputBuffer[0], "getPort", INPUT_WORD_SIZE) == 0) {
+            portExpanderRead();
+            Serial.print(portExpanderData);
             flushArguments();
         } else {
             flushArguments();

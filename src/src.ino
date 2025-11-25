@@ -19,7 +19,7 @@ void setup() {
     serialInit();
     bluetoothInit();
     portExpanderInit();
-    
+    portExpanderWrite(0b11111111);
     registerNewState(Idle, &idleState);
     //registerNewState(Slave, &slaveState);
     //registerNewState(RemoteControl, &remoteControlState);
