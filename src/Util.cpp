@@ -1,7 +1,5 @@
 #include "Util.h"
-
 volatile uint64_t ticks;
-
 void timerZeroInit(){
   TCCR0A = 0; // normal mode
   TCCR0B = 0;
@@ -9,10 +7,6 @@ void timerZeroInit(){
   TIMSK0 |= 0b00000001; // enable overflow interrupt
   TCNT0 = 0;
   ticks = 0;
-}
-
-void timerZeroUpdate(){
-  
 }
 
 ISR(TIMER0_OVF_vect) {

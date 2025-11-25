@@ -3,6 +3,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 
+#define seconds (ticks>>2^13);
 extern volatile uint64_t ticks;
 
 void timerZeroInit();
