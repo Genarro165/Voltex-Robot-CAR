@@ -6,6 +6,7 @@ void timerZeroInit(){
   TCCR0B |= 0b00000010; // prescaler 8
   TIMSK0 |= 0b00000001; // enable overflow interrupt
   TCNT0 = 0;
+  ticks = 0;
 }
 
 ISR(TIMER0_OVF_vect) {
