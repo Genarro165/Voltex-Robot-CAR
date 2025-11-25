@@ -90,6 +90,9 @@ void inputManagerUpdate() {
         } else if (strncmp(inputBuffer[0], "getS", INPUT_WORD_SIZE) == 0) {
             Serial.println(StringStates[currentState.id]);
             flushArguments();
+        } else if (strncmp(inputBuffer[0], "SetSpeed", INPUT_WORD_SIZE) == 0) {
+            Serial.print(inputBuffer[1]);
+            flushArguments();
         } else {
             flushArguments();
         }
