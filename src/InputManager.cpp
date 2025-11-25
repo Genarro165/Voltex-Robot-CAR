@@ -19,6 +19,26 @@ int strncmp( const char * s1, const char * s2, unsigned int n )
     }
 }
 
+//turn string into number
+int to_int(const char* str) {
+    
+    int num = 0;
+    char c;
+    while (*str != '\0') {
+        c = *(str++);
+        if (c > 64) {
+            c -= 55;
+        } else if (c > 47) {
+            c -= 48;
+        } else {
+            
+            break;
+        }
+        num = (num << 4) | c;
+    }
+    return num;
+}
+
 
 char inputBuffer[INPUT_MAX_ARGS][INPUT_WORD_SIZE] = {0};
 unsigned char argumentCount = 0;
@@ -93,9 +113,15 @@ void inputManagerUpdate() {
         } else if (strncmp(inputBuffer[0], "setSpeed", INPUT_WORD_SIZE) == 0) {
             Serial.print(inputBuffer[1]);
             flushArguments();
-        } else if (strncmp(inputBuffer[0], "getPort", INPUT_WORD_SIZE) == 0) {
-            portExpanderRead();
+        } else if (strncmp(inputBuffer[0], "getP", INPUT_WORD_SIZE) == 0) {
             Serial.print(portExpanderData);
+            Serial.print("\r\n");
+            flushArguments();
+        } else if (strncmp(inputBuffer[0], "setP", INPUT_WORD_SIZE) == 0) {
+            uint8_t val = to_int(inputBuffer[1]);
+            Serial.print(val);
+            Serial.print("\r\n");
+            portExpanderWrite(val);
             flushArguments();
         } else {
             flushArguments();
