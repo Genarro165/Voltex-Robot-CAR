@@ -22,21 +22,29 @@ ISR(PCINT2_vect) {
 
 void portExpanderInit() {
   Wire.begin();
-  DDRD &= ~(1 << 2);
-  PORTD |= (1 << 2); //set pin 2 to input pull up
-  //enable the pin change interupt for pin 2
+  
+  //set int pin to input pullup
+  DDRD &= ~PORT_EXPANDER_INT;
+  PORTD |= PORT_EXPANDER_INT;
+
+  //enable the pin change interupt for pin the int pin
   PCMSK2 |= (1 << PCINT18);
-  PCICR |= (1 << PCIE2); //enable the pin change group 2 wich contains pin 2
+  PCICR |= (1 << PCIE2); //enable the pin change group 2 wich contains the int pin
+  
+  //initialize state
   portExpanderData = 0;
   portExpanderEvent = NONE;
 }
 
 void portExpanderUpdate() {
+  
+  //request updated data from the pcf
   if (portExpanderEvent == NEW_VAL) {
     Wire.requestFrom(PORT_EXPANDER_ADRES, 1);
     portExpanderEvent = READ;
   }
-  if (Wire.available() && (portExpanderEvent == READ)) { //stores incomming 
+  //store incoming data
+  if (Wire.available() && (portExpanderEvent == READ)) {
     portExpanderData = Wire.read();
     portExpanderEvent = NONE;
   }
