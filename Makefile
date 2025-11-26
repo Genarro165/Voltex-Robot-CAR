@@ -4,7 +4,6 @@ BAUD ?= 9600
 TEST ?= false
 CORE ?= true
 
-
 ifeq ($(TEST), true)
 	CC = gcc
 	CXX = g++
@@ -20,7 +19,8 @@ else
 endif
 
 ifeq ($(CORE), true)
-	CXXFLAGS += -I../arduino-core
+
+CXXFLAGS += -I/usr/share/arduino/hardware/arduino/avr/variants/standard -I../arduino-core -D ARDUINO_CORE
 	LINK_FLAGS += ../arduino-core/*.o
 endif
 
@@ -48,7 +48,7 @@ $(MN_FILE): $(OBJS)
 	$(CXX) $(LINK_FLAGS) $(OBJS)
 	avr-size --format=avr --mcu=atmega328p $(MN_FILE)
 	@echo "programmer: $(PROG)"
-	@echo "port: 	   $(PORT)"
+	@echo "port: 	    $(PORT)"
 
 .PHONY: all install clean monitor
 
