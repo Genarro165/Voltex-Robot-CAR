@@ -10,3 +10,6 @@ extern unsigned char argumentCount;
 void flushArguments();
 int strncmp( const char * s1, const char * s2, unsigned int n );
 void inputManagerUpdate();
+
+void prints(const char* str);
+

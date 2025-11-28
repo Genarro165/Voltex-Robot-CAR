@@ -2,7 +2,7 @@
 
 
 void prints(const char* str) {
-    for (;*str != '0'; str++) {
+    for (;*str != '\0'; str++) {
         serialTransmit(*str);
     }
 }

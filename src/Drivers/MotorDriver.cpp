@@ -17,6 +17,7 @@ unsigned char currentMotorBSpeed = 0;
    TCCR1A |= (1 << COM1A1) | (1 << WGM11);
    TCCR1B |= (1 << WGM12) | (1 << WGM13) | (1 << CS10) | (1 << CS11);
 
+   //timer1 top value
    ICR1 = (F_CPU/(64*timer1_pwm_freq)) - 1;
   }
 

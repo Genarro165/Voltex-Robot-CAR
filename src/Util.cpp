@@ -1,4 +1,8 @@
 #include "Util.h"
+
+//tick lenght is 0.000128 seconds
+//ticks per time unit is time/0.000128, so ticks per second is 1/0.000128 = 7812
+
 volatile uint64_t ticks;
 void timerZeroInit(){
   TCCR0A = 0; // normal mode
