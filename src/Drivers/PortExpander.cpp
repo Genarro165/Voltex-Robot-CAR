@@ -9,10 +9,9 @@ enum portEvent : uint8_t {
 } portExpanderEvent;
 
 void portExpanderWrite(uint8_t mode) {
-  i2c_start();
-  i2c_addr(PORT_EXPANDER_ADRES);
-  i2c_tx_byte(mode);
-  i2c_stop();
+  Wire.beginTransmission(PORT_EXPANDER_ADRES);
+  Wire.write(mode);
+  Wire.endTransmission();
 }
 
 ISR(PCINT2_vect) {
@@ -22,7 +21,7 @@ ISR(PCINT2_vect) {
 }
 
 void portExpanderInit() {
-  i2c_init();
+  Wire.begin();
   
   //set int pin to input pullup
   DDRD &= ~PORT_EXPANDER_INT;
@@ -41,15 +40,13 @@ void portExpanderUpdate() {
   
   //request updated data from the pcf
   if (portExpanderEvent == NEW_VAL) {
-    i2c_addr(PORT_EXPANDER_ADRES);
+    Wire.requestFrom(PORT_EXPANDER_ADRES, 1);
     portExpanderEvent = READ;
   }
   //store incoming data
-  if (portExpanderEvent == READ) {
-    i2c_rx_byte(&portExpanderData);
+  if (Wire.available() && (portExpanderEvent == READ)) {
+    portExpanderData = Wire.read();
     portExpanderEvent = NONE;
   }
 }
-
-
 

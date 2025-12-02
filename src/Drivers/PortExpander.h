@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../avr-i2c/i2c.h"
+#include "../fuck-arduino-kekw/Wire.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdint.h>
