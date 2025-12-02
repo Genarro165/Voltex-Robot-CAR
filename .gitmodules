@@ -1,3 +1,0 @@
-[submodule "src/avr-i2c"]
-	path = src/avr-i2c
-	url = https://github.com/ecnx/avr-i2c.git
