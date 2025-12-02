@@ -25,6 +25,26 @@ int strncmp( const char * s1, const char * s2, unsigned int n )
     }
 }
 
+//turn number into string
+void to_str(char* str, int number) {
+    
+    static const char lookup[] = "0123456789ABCDEF";
+
+    int i = 12;
+    while(i >= 0) {
+        *(str++) = lookup[(number >> i) & 0xF];
+        i -= 4;
+    }
+}
+
+void printh(int number) {
+    char buff[5];
+    buff[4] = '\0';
+    to_str((char*) &buff, number);
+    prints(buff);
+}
+
+
 //turn string into number
 int to_int(const char* str) {
     
@@ -115,7 +135,14 @@ void inputManagerUpdate() {
         flushArguments();
     } else if (strncmp(inputBuffer[0], "setP", INPUT_WORD_SIZE) == 0) {
         uint8_t val = to_int(inputBuffer[1]);
+        char buff[] = "val: xxxx\r\n";
+        to_str(buff + 5, val);
+        prints(buff);
         portExpanderWrite(val);
+        flushArguments();
+    } else if (strncmp(inputBuffer[0], "getP", INPUT_WORD_SIZE) == 0) {
+        printh(portExpanderData);
+        prints("\r\n");
         flushArguments();
     } else {
         flushArguments();
