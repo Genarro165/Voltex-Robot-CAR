@@ -20,7 +20,7 @@ else
 endif
 
 ifeq ($(CORE), true)
-	CXXFLAGS += -I../arduino-core
+	CXXFLAGS += -I../arduino-core -I/usr/share/arduino/hardware/arduino/avr/variants/standard
 	LINK_FLAGS += ../arduino-core/*.o
 endif
 
@@ -29,24 +29,35 @@ $(shell cp $(INO_NAME).ino $(INO_NAME).cpp)
 SRCS ?= $(wildcard src/Drivers/*.cpp) $(wildcard src/*.cpp) $(wildcard src/States/*.cpp)
 TOTAL_SRCS += $(SRCS)
 OBJS = $(TOTAL_SRCS:.cpp=.o)
-PORT ?= /dev/ttyACM0
-BAUD ?= 9600
+
+BOARD ?= xplainedmini
+BAUD = 9600
+PORT ?= /dev/ttyUSB0
+ifeq ($(BOARD), xplainedmini)
+	P_PORT = usb
+	PROG = xplainedmini
+else
+	P_PORT = $(PORT)
+	PROG = arduino
+endif
 
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+.PHONY: all install clean monitor
+
 $(MN_FILE): $(OBJS)
 	$(CXX) $(LINK_FLAGS) $(OBJS)
+	@echo "programmer: $(PROG)"
+	@echo "port:       $(P_PORT)"
 	avr-size --format=avr --mcu=atmega328p $(MN_FILE)
-
-.PHONY: all install clean monitor
 
 all: $(MN_FILE)
 
 install: $(MN_FILE)
 	avr-objcopy -O ihex $(MN_FILE) main.hex
-	sudo avrdude -c xplainedmini -p m328p -C /etc/avrdude.conf -P usb -U flash:w:main.hex
+	sudo avrdude -c $(PROG) -p m328p -C /etc/avrdude.conf -P $(P_PORT) -U flash:w:main.hex
 	minicom --dev $(PORT) -b $(BAUD)
 
 monitor:

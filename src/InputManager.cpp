@@ -1,5 +1,5 @@
 #include "InputManager.h"
-
+#include "Drivers/PortExpander.h"
 
 int strncmp( const char * s1, const char * s2, unsigned int n )
 {
@@ -17,6 +17,26 @@ int strncmp( const char * s1, const char * s2, unsigned int n )
     {
         return ( *(unsigned char *)s1 - *(unsigned char *)s2 );
     }
+}
+
+//turn string into number
+int to_int(const char* str) {
+    
+    int num = 0;
+    char c;
+    while (*str != '\0') {
+        c = *(str++);
+        if (c > 64) {
+            c -= 55;
+        } else if (c > 47) {
+            c -= 48;
+        } else {
+            
+            break;
+        }
+        num = (num << 4) | c;
+    }
+    return num;
 }
 
 
@@ -70,23 +90,42 @@ void inputManagerUpdate() {
         parseArguments(bluetoothInputString, bluetoothInputSize);
         bluetoothStringComplete = false;
         bluetoothInputSize = 0;
-        Serial.print("bluetooth command: ");
-        Serial.println(inputBuffer[0]);
+        currentState.currentEvent = InputComplete;
     }
+    if (currentState.currentEvent == InputComplete) {
+        Serial.print("recieved: \"");
+        Serial.print(inputBuffer[0]);
+        Serial.print("\" : \"");
+        Serial.print(inputBuffer[1]);
+        Serial.print("\"\r\n");
 
-    if (strncmp(inputBuffer[0], "setS", INPUT_WORD_SIZE) == 0) {
-        Serial.println(inputBuffer[1]);
-        for (uint8_t i = 0; i < 4; i++) {
-            if (strncmp(inputBuffer[1], StringStates[i], INPUT_WORD_SIZE) == 0) {
-                currentState.id = (enum StateID) i;
+        if (strncmp(inputBuffer[0], "setS", INPUT_WORD_SIZE) == 0) {
+            Serial.println(inputBuffer[1]);
+            for (uint8_t i = 0; i < 4; i++) {
+                if (strncmp(inputBuffer[1], StringStates[i], INPUT_WORD_SIZE) == 0) {
+                    currentState.id = (enum StateID) i;
+                }
             }
+            flushArguments();
+        } else if (strncmp(inputBuffer[0], "getS", INPUT_WORD_SIZE) == 0) {
+            Serial.println(StringStates[currentState.id]);
+            flushArguments();
+        } else if (strncmp(inputBuffer[0], "setSpeed", INPUT_WORD_SIZE) == 0) {
+            Serial.print(inputBuffer[1]);
+            flushArguments();
+        } else if (strncmp(inputBuffer[0], "getP", INPUT_WORD_SIZE) == 0) {
+            Serial.print(portExpanderData);
+            Serial.print("\r\n");
+            flushArguments();
+        } else if (strncmp(inputBuffer[0], "setP", INPUT_WORD_SIZE) == 0) {
+            uint8_t val = to_int(inputBuffer[1]);
+            Serial.print(val);
+            Serial.print("\r\n");
+            portExpanderWrite(val);
+            flushArguments();
+        } else {
+            flushArguments();
         }
-        flushArguments();
-    } else if (strncmp(inputBuffer[0], "getS", INPUT_WORD_SIZE) == 0) {
-        Serial.println(StringStates[currentState.id]);
-        flushArguments();
-    } else {
-        flushArguments();
     }
 }
 
