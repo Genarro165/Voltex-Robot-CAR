@@ -13,7 +13,7 @@ ifeq ($(TEST), true)
 else
 	CC = avr-gcc
 	CXX = avr-g++
-	CXXFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os -Wall -std=gnu++11 -flto -fno-exceptions -fno-rtti -ffunction-sections -fdata-sections
+	CXXFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os -Wall -std=gnu++11 -flto -fno-exceptions -fno-rtti -ffunction-sections -fdata-sections -D F_CPU=16000000UL
 	MN_FILE = main.elf
 	LINK_FLAGS = -Os -mmcu=$(MCU) -o $(MN_FILE) -flto -Wl,--gc-sections
 endif
@@ -26,7 +26,7 @@ endif
 
 INO_NAME = src/src
 $(shell cp $(INO_NAME).ino $(INO_NAME).cpp)
-SRCS ?= $(wildcard src/Drivers/*.cpp) $(wildcard src/*.cpp) $(wildcard src/States/*.cpp)
+SRCS ?= $(wildcard src/Drivers/*.cpp) $(wildcard src/*.cpp) $(wildcard src/States/*.cpp) $(wildcard src/avr-i2c/*.cpp)
 TOTAL_SRCS += $(SRCS)
 OBJS = $(TOTAL_SRCS:.cpp=.o)
 MONITOR_PORT ?= /dev/ttyUSB0
