@@ -1,8 +1,5 @@
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <util/delay.h>
+
 #include "DistanceSensor.h"
-#include "../Util.h"
 
 int leftDistance_cm;
 int rightDistance_cm;
@@ -35,7 +32,7 @@ void trigger(){
  PORTB |= ~(PBtrigPin);
 }
 
-/*
+#ifndef ARDUINO_CORE
 //left pin interupt
 ISR(INT1_vect){
  if (PIND & PDleftEchoPin){
@@ -76,9 +73,14 @@ ISR(PCINT2_vect){
   }
  }
 }
-*/
 
-/*
+void distanceSensorUpdate() {
+
+}
+
+#else
+
+
 void distanceSensorUpdate(){
   trigger();
   unsigned long leftDuration = pulseIn( leftEchoPin, HIGH, 10000);
@@ -90,4 +92,5 @@ void distanceSensorUpdate(){
   unsigned long middleDuration = pulseIn(middleEchoPin, HIGH, 10000);
   middleDistance_cm = middleDuration * 0.034 / 2;
 }
-*/
+
+#endif

@@ -1,6 +1,12 @@
 #pragma once
+
+#ifdef ARDUINO_CORE
+
 #include <Arduino.h>
 #include <SoftwareSerial.h>
+
+#endif
+
 #define BRX 12
 #define BTX 13
 #define BLUETOOTH_BUFFER_SIZE 32
