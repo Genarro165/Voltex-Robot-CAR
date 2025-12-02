@@ -44,7 +44,7 @@ ISR(INT1_vect){
    leftTimeStart = 0; 
  } 
 }
-
+/*
 // middle and right pin interupts
 ISR(PCINT2_vect){
  uint8_t changed = PIND ^ lastPinDState; // which pins changed?
@@ -72,7 +72,7 @@ ISR(PCINT2_vect){
    rightTimeStart = 0;
   }
  }
-}
+}*/
 
 void distanceSensorUpdate() {
 
