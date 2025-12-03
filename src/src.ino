@@ -6,6 +6,7 @@
 #include "Drivers/MotorDriver.h"
 #include "Drivers/SerialDriver.h"
 #include "Drivers/BluetoothDriver.h"
+#include "Drivers/PortExpander.h"
 #include "States/Autonomous.h"
 #include "States/Idle.h"
 #include "States/RemoteControl.h"
@@ -19,6 +20,7 @@ void setup() {
     serialInit(CALC_BAUD(9600));
     //bluetoothInit();
     timerZeroInit();
+    portExpanderInit();
 
     registerNewState(Idle, &idleState);
     //registerNewState(Slave, &slaveState);
@@ -33,6 +35,7 @@ void loop() {
     //bluetoothUpdate();
     //distanceSensorUpdate();
     //lineSensorUpdate();
+    portExpanderUpdate();
     inputManagerUpdate();
     //execute the current state
     runCurrentState();
