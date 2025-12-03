@@ -13,6 +13,7 @@ ifeq ($(TEST), true)
 else
 	CC = avr-gcc
 	CXX = avr-g++
+	CCFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os -Wall -std=gnu11 -flto -fno-rtti -ffunction-sections -fdata-sections
 	CXXFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os -Wall -std=gnu++11 -flto -fno-exceptions -fno-rtti -ffunction-sections -fdata-sections
 	MN_FILE = main.elf
 	LINK_FLAGS = -Os -mmcu=$(MCU) -o $(MN_FILE) -flto -Wl,--gc-sections
@@ -26,9 +27,10 @@ endif
 
 INO_NAME = src/src
 $(shell cp $(INO_NAME).ino $(INO_NAME).cpp)
-SRCS ?= $(wildcard src/Drivers/*.cpp) $(wildcard src/*.cpp) $(wildcard src/States/*.cpp)
+SRCS ?= $(wildcard src/Drivers/*.cpp) $(wildcard src/*.cpp) $(wildcard src/States/*.cpp) $(wildcard src/fuck-arduino-kekw/*.cpp)
+
 TOTAL_SRCS += $(SRCS)
-OBJS = $(TOTAL_SRCS:.cpp=.o)
+OBJS = $(TOTAL_SRCS:.cpp=.o) src/fuck-arduino-kekw/utility/twi.o
 MONITOR_PORT ?= /dev/ttyUSB0
 BAUD ?= 9600
 BOARD ?= xplainedmini
@@ -43,6 +45,9 @@ endif
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+%.o: %.c
+	$(CC) $(CCFLAGS) -c $< -o $@
 
 $(MN_FILE): $(OBJS)
 	$(CXX) $(LINK_FLAGS) $(OBJS)

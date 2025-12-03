@@ -2,8 +2,6 @@
 #include <stdint.h>
 #include "avr/interrupt.h"
 
-#define F_CPU 16000000UL
-
 #define CALC_BAUD(BAUD) F_CPU/16/BAUD-1
 
 // UART Buffer Defines
