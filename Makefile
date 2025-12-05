@@ -27,7 +27,7 @@ endif
 
 INO_NAME = src/src
 $(shell cp $(INO_NAME).ino $(INO_NAME).cpp)
-SRCS ?= $(wildcard src/Drivers/*.cpp) $(wildcard src/*.cpp) $(wildcard src/States/*.cpp) $(wildcard src/fuck-arduino-kekw/*.cpp)
+SRCS ?= $(wildcard src/Drivers/*.cpp) $(wildcard src/*.cpp) $(wildcard src/States/*.cpp) $(wildcard src/fuck-arduino-kekw/*.cpp) $(wildcard src/fuck-arduino-kekw/Arduino-LiquidCrystal-I2C-library/*.cpp)
 
 TOTAL_SRCS += $(SRCS)
 OBJS = $(TOTAL_SRCS:.cpp=.o) src/fuck-arduino-kekw/utility/twi.o
