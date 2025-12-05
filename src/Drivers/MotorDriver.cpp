@@ -31,26 +31,28 @@ unsigned char currentMotorBSpeed = 0;
 
 static void setMotorParams(bool a_in1, bool a_in2, bool b_in3, bool b_in4) {
 
-
   timer1_set_pwm(currentMotorASpeed, currentMotorBSpeed);
 
-
-       if (a_in1 == true)
-            PORTD |= (MOTOR_A_IN1);
-        else
-            PORTD &= ~(MOTOR_A_IN1);
-       if (a_in2 == true)
-            PORTD |= (MOTOR_A_IN2);
-        else
-            PORTD &= ~(MOTOR_A_IN2);
-       if (b_in3 == true)
-            PORTD |= (MOTOR_B_IN3);
-        else
-            PORTD &= ~(MOTOR_B_IN3);
-     if (b_in4 == true)
-            PORTD |= (MOTOR_B_IN4);
-        else
-            PORTD &= ~(MOTOR_B_IN4);
+  if (a_in1 == true) {
+    PORTD |= (MOTOR_A_IN1);
+  } else {
+    PORTD &= ~(MOTOR_A_IN1);
+  }
+  if (a_in2 == true) {
+    PORTD |= (MOTOR_A_IN2);
+  } else {
+    PORTD &= ~(MOTOR_A_IN2);
+  }
+  if (b_in3 == true) {
+    PORTD |= (MOTOR_B_IN3);
+  } else {
+    PORTD &= ~(MOTOR_B_IN3);
+  }
+  if (b_in4 == true) {
+    PORTD |= (MOTOR_B_IN4);
+  } else {
+    PORTD &= ~(MOTOR_B_IN4);
+  }
 }
 
 
@@ -70,16 +72,18 @@ void setMotorState(enum MotorState newMotorState) {
   if (currentMotorState == newMotorState) {
     return;
   }
+  currentMotorState = newMotorState;
   switch(newMotorState) { //this can be written a lot better but i dint have the time to make it better
     case HALTED:
       setMotorSpeed(0);
-      setMotorParams(0, 0, 0, 0);
+      setMotorParams(false, false, false, false);
       break;
     case FORWARDS:
       setMotorParams(true, false, true, false);
       break;
     case BACKWARDS:
       setMotorParams(false, true, false, true);
+      break;
     case LEFT:
       currentMotorASpeed = (unsigned char) currentMotorASpeed*TURN_FACTOR;
       currentMotorBSpeed = (unsigned char) currentMotorBSpeed*(1 + TURN_FACTOR);
@@ -95,6 +99,7 @@ void setMotorState(enum MotorState newMotorState) {
       break;
     case HARD_RIGHT:
       setMotorParams(true, false, false, true);
+      break;
     default:
       break;
   }
