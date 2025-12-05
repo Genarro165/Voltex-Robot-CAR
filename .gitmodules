@@ -1,0 +1,3 @@
+[submodule "src/fuck-arduino-kekw/Arduino-LiquidCrystal-I2C-library"]
+	path = src/fuck-arduino-kekw/Arduino-LiquidCrystal-I2C-library
+	url = https://github.com/imbluedabr/Arduino-LiquidCrystal-I2C-library.git
