@@ -12,30 +12,33 @@
 #include "States/RemoteControl.h"
 #include "States/Slave.h"
 #include "Util.h"
+#include "fuck-arduino-kekw/Arduino-LiquidCrystal-I2C-library/LiquidCrystal_I2C.h"
+#include "fuck-arduino-kekw/Wire.h"
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
 
 void setup() {
     //lineSensorInit();
     //distanceSensorInit();
-    //motorDriverInit();
+    motorDriverInit();
     serialInit(CALC_BAUD(9600));
     //bluetoothInit();
     timerZeroInit();
-    portExpanderInit();
+    //portExpanderInit();
 
     registerNewState(Idle, &idleState);
-    //registerNewState(Slave, &slaveState);
-    //registerNewState(RemoteControl, &remoteControlState);
-    //registerNewState(Autonomous, &autonomousState); 
+    registerNewState(Slave, &slaveState);
+    registerNewState(RemoteControl, &remoteControlState);
+    registerNewState(Autonomous, &autonomousState); 
 }
-
-uint16_t lastRun = 0;
 
 void loop() {
     //run all of the update functions
     //bluetoothUpdate();
     //distanceSensorUpdate();
     //lineSensorUpdate();
-    portExpanderUpdate();
+    //portExpanderUpdate();
     inputManagerUpdate();
     //execute the current state
     runCurrentState();

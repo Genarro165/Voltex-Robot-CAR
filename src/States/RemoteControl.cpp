@@ -14,6 +14,8 @@ void remoteControlState(struct State* currState){
       setMotorState(BACKWARDS);
     } else if (strncmp(inputBuffer[0], "halt", 4) == 0){
       setMotorState(HALTED);
+    } else {
+      prints("unkown command\r\n");
     }
     flushArguments();
   }

@@ -14,7 +14,13 @@ void timerZeroInit(){
 }
 
 ISR(TIMER0_OVF_vect) {
-   ticks++;  // One tick per overflow
+  ticks++;  // One tick per overflow
+}
+
+//dont use lol
+void tick_delay(uint64_t delay) {
+  uint64_t start = ticks;
+  while((ticks - start) < delay);
 }
 
 void eepromWrite(uint16_t address, uint8_t data) {

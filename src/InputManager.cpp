@@ -144,8 +144,6 @@ void inputManagerUpdate() {
         printh(portExpanderData);
         prints("\r\n");
         flushArguments();
-    } else {
-        flushArguments();
     }
 }
 
