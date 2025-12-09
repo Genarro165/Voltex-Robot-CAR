@@ -9,7 +9,7 @@ const int timer1_pwm_freq = 60;
 
   // Fast PWM, 8-bit, non-inverting, prescaler 64
 
-void timer1_init() {
+void timer1Init() {
 
     TCCR1A = 0;
     TCCR1B = 0;
@@ -22,7 +22,7 @@ void timer1_init() {
     ICR1 = (F_CPU / (64 * timer1_pwm_freq)) - 1;
 
 }
-void timer1_set_pwm() {
+void timer1SetPWM() {
 
     if (currentMotorASpeed == 0) OCR1A = 0;
     else OCR1A = ICR1 / (100 / currentMotorASpeed);
@@ -37,24 +37,24 @@ static void setMotorParams(bool a_in1, bool a_in2, bool b_in3, bool b_in4) {
   timer1_set_pwm();
 
   if (a_in1 == true) {
-    PORTD |= (MOTOR_A_IN1);
+    portExpanderMode |= MOTOR_A_IN1;
   } else {
-    PORTD &= ~(MOTOR_A_IN1);
+    portExpanderMode &= ~MOTOR_A_IN1;
   }
   if (a_in2 == true) {
-    PORTD |= (MOTOR_A_IN2);
+    portExpanderMode |= MOTOR_A_IN2;
   } else {
-    PORTD &= ~(MOTOR_A_IN2);
+    portExpanderMode &= ~MOTOR_A_IN2;
   }
   if (b_in3 == true) {
-    PORTD |= (MOTOR_B_IN3);
+    portExpanderMode |= MOTOR_B_IN3
   } else {
-    PORTD &= ~(MOTOR_B_IN3);
+    portExpanderMode &= ~(MOTOR_B_IN3);
   }
   if (b_in4 == true) {
-    PORTD |= (MOTOR_B_IN4);
+    portExpanderMode |= (MOTOR_B_IN4);
   } else {
-    PORTD &= ~(MOTOR_B_IN4);
+    portExpanderMode &= ~(MOTOR_B_IN4);
   }
 }
 
@@ -62,13 +62,13 @@ static void setMotorParams(bool a_in1, bool a_in2, bool b_in3, bool b_in4) {
 void setMotorSpeed(unsigned char speed) {
   currentMotorASpeed = speed;
   currentMotorBSpeed = speed;
-  timer1_set_pwm();
+  timer1SetPWM();
 }
 
 void changeMotorSpeed(unsigned char speed) {
   currentMotorASpeed -= speed;
   currentMotorBSpeed -= speed;
-  timer1_set_pwm();
+  timer1SetPWM();
 }
 
 void setMotorTurningFactor(float newTurnFactor) {
@@ -80,13 +80,15 @@ void setMotorTurningFactor(float newTurnFactor) {
     currentMotorASpeed = (unsigned char) currentMotorASpeed*(1 + turnFactor);
     currentMotorBSpeed = (unsigned char) currentMotorBSpeed*(1 - turnFactor);
   }
-  timer1_set_pwm();
+  timer1SetPWM();
 }
 
 void motorDriverInit(){
-  DDRD |= (MOTOR_A_IN1 | MOTOR_A_IN2 | MOTOR_B_IN3 | MOTOR_B_IN4);
+  //set the motor pins to ground
+  portExpanderWrite(portExpanderMode & (~MOTOR_A_IN1 | ~MOTOR_A_IN2 | ~MOTOR_B_IN3 | ~MOTOR_B_IN4));
+
   DDRB |= MOTOR_A_PWM | MOTOR_B_PWM;
-  timer1_init();
+  timer1Init();
   setMotorSpeed(255);
 }
 
