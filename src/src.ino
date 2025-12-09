@@ -23,7 +23,7 @@ void setup() {
     //distanceSensorInit();
     motorDriverInit();
     serialInit(CALC_BAUD(9600));
-    //bluetoothInit();
+    bluetoothInit();
     timerZeroInit();
     //portExpanderInit();
 
@@ -35,7 +35,7 @@ void setup() {
 
 void loop() {
     //run all of the update functions
-    //bluetoothUpdate();
+    bluetoothUpdate();
     //distanceSensorUpdate();
     //lineSensorUpdate();
     //portExpanderUpdate();
