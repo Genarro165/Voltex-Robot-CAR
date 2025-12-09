@@ -34,7 +34,7 @@ void timer1SetPWM() {
 
 static void setMotorParams(bool a_in1, bool a_in2, bool b_in3, bool b_in4) {
 
-  timer1_set_pwm();
+  timer1SetPWM();
 
   if (a_in1 == true) {
     portExpanderMode |= MOTOR_A_IN1;
@@ -47,7 +47,7 @@ static void setMotorParams(bool a_in1, bool a_in2, bool b_in3, bool b_in4) {
     portExpanderMode &= ~MOTOR_A_IN2;
   }
   if (b_in3 == true) {
-    portExpanderMode |= MOTOR_B_IN3
+    portExpanderMode |= MOTOR_B_IN3;
   } else {
     portExpanderMode &= ~(MOTOR_B_IN3);
   }
