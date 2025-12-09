@@ -5,6 +5,10 @@
 #include <Arduino.h>
 #include <SoftwareSerial.h>
 
+#else
+
+#include "../fuck-arduino-kekw/SoftwareSerial.h"
+
 #endif
 
 #define BRX 12
