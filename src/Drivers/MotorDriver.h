@@ -1,18 +1,19 @@
 #pragma once
 #include <avr/io.h>
+#include <avr/interrupt.h>
+#include <stdint.h>
 
 //motor A is the left channel and motor B is the right channel
 
-#define MOTOR_A_PWM (1<<6)
-#define MOTOR_B_PWM (1<<5)
+//port B
+#define MOTOR_A_PWM (1<<1)
+#define MOTOR_B_PWM (1<<2)
 
+//port D
 #define MOTOR_A_IN1 (1<<3)
 #define MOTOR_A_IN2 (1<<2)
 #define MOTOR_B_IN3 (1<<7)
 #define MOTOR_B_IN4 (1<<4)
-
-//this controls the turn speed of the gradual turns
-#define TURN_FACTOR 0.75
 
 enum MotorState {
   HALTED,   //this state turns everything off
@@ -32,6 +33,9 @@ void setMotorSpeed(unsigned char speed);
 
 //chang the speed by a relative amount
 void changeMotorSpeed(unsigned char speed);
+
+//change the turning factor and update pwm
+void setMotorTurningFactor(float newTurnFactor);
 
 //set the direction of the car
 void setMotorState(enum MotorState newMotorState);

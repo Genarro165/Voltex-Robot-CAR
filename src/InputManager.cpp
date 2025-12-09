@@ -115,14 +115,12 @@ void inputManagerUpdate() {
         parseArguments(bluetoothInputString, bluetoothInputSize);
         bluetoothStringComplete = false;
         bluetoothInputSize = 0;
-        prints("bluetooth command: ");
-        prints(inputBuffer[0]);
+        prints("ble: ");
+        prints(bluetoothInputString);
         prints("\r\n");
     }
 
     if (strncmp(inputBuffer[0], "setS", INPUT_WORD_SIZE) == 0) {
-        prints(inputBuffer[1]);
-        prints("\r\n");
         for (uint8_t i = 0; i < 4; i++) {
             if (strncmp(inputBuffer[1], StringStates[i], INPUT_WORD_SIZE) == 0) {
                 currentState.id = (enum StateID) i;
@@ -144,7 +142,19 @@ void inputManagerUpdate() {
         printh(portExpanderData);
         prints("\r\n");
         flushArguments();
-    } else {
+    } else if (strncmp(inputBuffer[0], "ss", INPUT_WORD_SIZE) == 0) {
+        uint8_t val = to_int(inputBuffer[1]);
+        char buff[] = "val: xxxx\r\n";
+        to_str(buff + 5, val);
+        prints(buff);
+        setMotorSpeed(val);
+        flushArguments();
+    } else if (strncmp(inputBuffer[0], "stf", INPUT_WORD_SIZE) == 0) {
+        uint8_t val = to_int(inputBuffer[1]);
+        char buff[] = "val: xxxx\r\n";
+        to_str(buff + 5, val);
+        prints(buff);
+        setMotorTurningFactor(val*0.01);
         flushArguments();
     }
 }

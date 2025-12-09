@@ -11,6 +11,7 @@
 
 //this holds the data read from the port expander, this automatically updates using interupts
 extern uint8_t portExpanderData;
+extern uint8_t portExpanderMode;
 
 //initiate write
 void portExpanderWrite(uint8_t mode);
