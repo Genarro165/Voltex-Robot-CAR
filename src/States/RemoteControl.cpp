@@ -12,6 +12,8 @@ void remoteControlState(struct State* currState){
       setMotorState(RIGHT);
     } else if (strncmp(inputBuffer[0], "s", 1) == 0) {
       setMotorState(BACKWARDS);
+    } else if (strncmp(inputBuffer[0], "t", 1) == 0) {
+      
     } else if (strncmp(inputBuffer[0], "halt", 4) == 0){
       setMotorState(HALTED);
     } else {
