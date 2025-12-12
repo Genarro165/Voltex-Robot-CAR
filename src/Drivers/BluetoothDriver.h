@@ -8,11 +8,11 @@
 #else
 
 #include "../fuck-arduino-kekw/SoftwareSerial.h"
-
+#include "../InputManager.h"
 #endif
 
-#define BRX 12
-#define BTX 13
+#define BRX 4
+#define BTX 5
 #define BLUETOOTH_BUFFER_SIZE 32
 
 extern char bluetoothInputString[BLUETOOTH_BUFFER_SIZE];
