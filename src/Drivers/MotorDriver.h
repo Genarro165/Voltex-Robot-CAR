@@ -2,6 +2,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdint.h>
+#include "PortExpander.h"
 
 //motor A is the left channel and motor B is the right channel
 
@@ -9,11 +10,11 @@
 #define MOTOR_A_PWM (1<<1)
 #define MOTOR_B_PWM (1<<2)
 
-//port D
-#define MOTOR_A_IN1 (1<<3)
-#define MOTOR_A_IN2 (1<<2)
-#define MOTOR_B_IN3 (1<<7)
-#define MOTOR_B_IN4 (1<<4)
+//port expander
+#define MOTOR_A_IN1 (1<<0)
+#define MOTOR_A_IN2 (1<<1)
+#define MOTOR_B_IN3 (1<<2)
+#define MOTOR_B_IN4 (1<<3)
 
 enum MotorState {
   HALTED,   //this state turns everything off

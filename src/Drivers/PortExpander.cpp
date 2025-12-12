@@ -35,7 +35,7 @@ void portExpanderInit() {
   
   //initialize state
   portExpanderData = 0;
-  portExpanderMode = 0;
+  portExpanderMode = 255;
   portExpanderEvent = NONE;
 }
 
