@@ -14,8 +14,39 @@ void timerZeroInit(){
 }
 
 ISR(TIMER0_OVF_vect) {
-   ticks++;  // One tick per overflow
+  ticks++;  // One tick per overflow
 }
+
+//dont use lol
+void tick_delay(uint64_t delay) {
+  uint64_t start = ticks;
+  while((ticks - start) < delay);
+}
+
+struct Task* taskList[TASKLIST_LEN] = {0};
+
+int registerTask(struct Task* task) {
+  for (int i = 0; i < TASKLIST_LEN; i++) {
+    if (taskList[i] == NULL) {
+      taskList[i] = task;
+      return i;
+    }
+  }
+  return -1;
+}
+
+void taskUpdate() {
+  for (int i = 0; i < TASKLIST_LEN; i++) {
+    struct Task* t = taskList[i];
+    if (t != NULL) {
+      if ((ticks - t->lastUpdate) > t->interval) {
+        t->callback(t);
+        t->lastUpdate = ticks;
+      }
+    }
+  }
+}
+
 
 void eepromWrite(uint16_t address, uint8_t data) {
     // Wait for completion of previous write

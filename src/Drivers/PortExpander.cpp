@@ -1,6 +1,7 @@
 #include "PortExpander.h"
 
 uint8_t portExpanderData;
+uint8_t portExpanderMode;
 
 enum portEvent : uint8_t {
   NONE,
@@ -9,6 +10,7 @@ enum portEvent : uint8_t {
 } portExpanderEvent;
 
 void portExpanderWrite(uint8_t mode) {
+  portExpanderMode = mode;
   Wire.beginTransmission(PORT_EXPANDER_ADRES);
   Wire.write(mode);
   Wire.endTransmission();
@@ -33,6 +35,7 @@ void portExpanderInit() {
   
   //initialize state
   portExpanderData = 0;
+  portExpanderMode = 255;
   portExpanderEvent = NONE;
 }
 
