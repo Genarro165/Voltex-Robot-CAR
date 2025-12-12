@@ -19,7 +19,7 @@
 
 
 void setup() {
-    //distanceSensorInit();
+    distanceSensorInit();
     serialInit(CALC_BAUD(9600));
     timerZeroInit();
     bluetoothInit();
