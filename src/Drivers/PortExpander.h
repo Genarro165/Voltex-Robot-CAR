@@ -1,10 +1,12 @@
 #pragma once
 
 #include "../fuck-arduino-kekw/Wire.h"
+#include "../InputManager.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <stdint.h>
 #include <stdbool.h>
+
 
 #define PORT_EXPANDER_ADRES 0x20
 #define PORT_EXPANDER_INT (1 << 2)
