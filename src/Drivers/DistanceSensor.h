@@ -18,6 +18,8 @@
 extern int leftDistance_cm;
 extern int middleDistance_cm;
 extern int rightDistance_cm;
+
+void trigger(struct Task* myTask);
 void distanceSensorUpdate();
 void distanceSensorInit();
 
