@@ -142,6 +142,10 @@ void inputManagerUpdate() {
         printh(portExpanderData);
         prints("\r\n");
         flushArguments();
+    } else if (strncmp(inputBuffer[0], "getPM", INPUT_WORD_SIZE) == 0) {
+        printh(portExpanderMode);
+        prints("\r\n");
+        flushArguments();
     } else if (strncmp(inputBuffer[0], "ss", INPUT_WORD_SIZE) == 0) {
         uint8_t val = to_int(inputBuffer[1]);
         char buff[] = "val: xxxx\r\n";
