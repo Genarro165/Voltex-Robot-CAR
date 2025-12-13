@@ -8,7 +8,13 @@ int leftTimeStart;
 int rightTimeStart;
 int middleTimeStart;
 int lastPinDState;
-struct Task triggerTask = {interval = MS_TO_TICKS(100),lastUpdate = 0, callback = &trigger};
+
+struct Task triggerTask = {
+  .interval = MS_TO_TICKS(100),
+  .lastUpdate = 0,
+  .callback = &trigger
+};
+
 void distanceSensorInit(){
  
  // setting echo pins to input
@@ -25,7 +31,7 @@ void distanceSensorInit(){
  registerTask(&triggerTask);
 }
 
-void trigger(){
+void trigger(struct Task* myTask) {
  PORTB |= (PBTRIGPIN);
  _delay_us(10);
  PORTB |= ~(PBTRIGPIN);

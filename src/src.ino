@@ -15,18 +15,21 @@
 #include "fuck-arduino-kekw/Arduino-LiquidCrystal-I2C-library/LiquidCrystal_I2C.h"
 #include "fuck-arduino-kekw/Wire.h"
 
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+//LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 
 void setup() {
-    //lineSensorInit();
-    //distanceSensorInit();
-    motorDriverInit();
+    distanceSensorInit();
     serialInit(CALC_BAUD(9600));
-    bluetoothInit();
     timerZeroInit();
-    //portExpanderInit();
+    bluetoothInit();
 
+    Wire.begin();
+    portExpanderInit();
+
+    lineSensorInit();
+    motorDriverInit();
+    
     registerNewState(Idle, &idleState);
     registerNewState(Slave, &slaveState);
     registerNewState(RemoteControl, &remoteControlState);
@@ -35,11 +38,12 @@ void setup() {
 
 void loop() {
     //run all of the update functions
+    
+    portExpanderUpdate();
+    lineSensorUpdate();
     bluetoothUpdate();
-    //distanceSensorUpdate();
-    //lineSensorUpdate();
-    //portExpanderUpdate();
     inputManagerUpdate();
+
     //execute the current state
     runCurrentState();
 }
