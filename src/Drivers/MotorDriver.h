@@ -23,8 +23,8 @@ enum Direction : uint8_t {
   STOPPED
 };
 
-#define ERROR_FACTOR 1
-#define ERROR_SHUTOFF 20
+#define MAX_ACCEL 5
+#define MAX_DECEL 10
 
 struct MotorStateMachine {
   uint8_t targetSpeed;
@@ -48,6 +48,8 @@ enum MotorMode : uint8_t {
 };
 
 extern enum MotorMode currentMotorMode;
+
+extern uint8_t motorBaseSpeed;
 
 //set the absolute speed of the motors
 void setMotorSpeed(uint8_t speed);
